@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A read on where the agent layer stops and the orchestration layer starts. for Glidely</title>
+  <meta name="description" content="Saw the renewal agent pulling from Brex, Ironclad, and Slack at once. That's a multi-agent context problem. Here is how to keep it debuggable past month nine." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" type="image/png" href="logo-mark.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="container row">
+      <a class="brand" href="https://glidely.ai" target="_blank" rel="noopener" aria-label="Glidely home">
+        <img src="logo.png" alt="Glidely" />
+      </a>
+      <span class="for-tag">Prepared for <strong>Glidely</strong> &middot; eMerge Americas 2026 &middot; SS26</span>
+    </div>
+  </header>
+
+  <div class="horizon" aria-hidden="true">
+    <div class="container" style="position: relative; height: 110px;">
+      <div class="sun"></div>
+    </div>
+    <div class="rule"></div>
+  </div>
+
+  <main>
+
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow"><span class="dot"></span> A note from Eduba to Shu and Yas</span>
+        <h1>A read on where the agent layer stops and the orchestration layer starts.</h1>
+        <p class="sub">
+          One page. Written after reading the Babson piece, the Noxx case study, and what glidely.ai tells us about the two agents already in flight.
+        </p>
+        <div class="meta" role="list">
+          <span class="chip amber" role="listitem">Renewals agent</span>
+          <span class="chip emerald" role="listitem">New purchasing agent</span>
+          <span class="chip sky" role="listitem">Brex &middot; Ironclad &middot; Jira &middot; Slack</span>
+          <span class="chip" role="listitem">10 POCs &middot; 40% shorter cycles</span>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <div class="head">
+              <h4>Renewal agent, Acme Co.</h4>
+              <span class="status live">In flight</span>
+            </div>
+            <p>Read contract, diffed usage, flagged notice window. Dropped brief in Teams.</p>
+            <div class="line"><span class="k">Notice window</span><span class="v">18 days</span></div>
+            <div class="line"><span class="k">Seat waste</span><span class="v">31%</span></div>
+            <div class="line"><span class="k">Next action</span><span class="v">Owner review</span></div>
+          </article>
+
+          <article class="card">
+            <div class="head">
+              <h4>New purchasing, Vendor X vs Y</h4>
+              <span class="status queued">Queued</span>
+            </div>
+            <p>Intake interview captured, RFX drafted, two suppliers pre-qualified.</p>
+            <div class="line"><span class="k">Stakeholders</span><span class="v">4</span></div>
+            <div class="line"><span class="k">Shortlist</span><span class="v">2 of 11</span></div>
+            <div class="line"><span class="k">Cycle target</span><span class="v">-40%</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pitch">
+      <div class="container">
+        <h2>The question that gets harder as the customer count grows is context.</h2>
+
+        <div class="body">
+          <p class="lede">
+            Glidely is pulling contracts from <a href="https://www.ironclad.com" target="_blank" rel="noopener">Ironclad</a>, spend from <a href="https://www.brex.com" target="_blank" rel="noopener">Brex</a>, tasks from <a href="https://www.atlassian.com/software/jira" target="_blank" rel="noopener">Jira</a>, and stakeholder input from <a href="https://slack.com" target="_blank" rel="noopener">Slack</a> into one agent workflow. The renewal agent flags notice windows, surfaces seat waste, and drops the next action back into Teams. The new-purchasing agent captures requirements, generates RFXs, and starts supplier outreach. Ten POCs so far, 40% shorter cycles. Seven figures in vendor spend moving through the product each month.
+          </p>
+
+          <p>
+            The question that gets harder as the customer count grows is context. Not prompts. Context. Which contract did the agent read, in what order, under which interpretation of the stakeholder's intake interview. When a customer calls six weeks in asking why the agent surfaced vendor X and not vendor Y, the answer has to be reproducible and auditable without the founders in the loop.
+          </p>
+
+          <p>
+            Eduba thinks about AI systems in three layers. About 60% of the work is traditional code and databases, the kind of plumbing that keeps integrations alive. Another 30% is rule-based logic, the conditionals that decide which agent wakes up when and what it is allowed to touch. The remaining 10% is genuine AI work, where language models do something a rule cannot. Teams that do not draw those lines end up putting LLMs where Postgres would do the job faster, cheaper, and with better guarantees. For Glidely, the 10% is real, and the context-management layer that makes the 10% debuggable is where most of the engineering leverage sits.
+          </p>
+
+          <div class="layers" role="list" aria-label="Three layers of AI work">
+            <div class="layer" role="listitem">
+              <div class="pct">60%</div>
+              <div class="label">Traditional code and databases</div>
+            </div>
+            <div class="layer" role="listitem">
+              <div class="pct">30%</div>
+              <div class="label">Rule-based logic</div>
+            </div>
+            <div class="layer ten" role="listitem">
+              <div class="pct">10%</div>
+              <div class="label">Genuine AI work</div>
+            </div>
+          </div>
+
+          <p style="margin-top: 36px;">
+            <a href="https://feeld.co" target="_blank" rel="noopener">Feeld</a> (the product company, Andrew Santus, CTO) ran a scoped sprint with us on exactly this problem. Workshop, advisory calls, an Organizational Context Architecture their team still uses. Deliverable was not a slide deck. It was a folder structure and a set of rules for how their agents read and write context, so the next engineer they hired could understand the system without a month of ramp.
+          </p>
+
+          <p>
+            The underlying method is published: <strong>Interpretable Context Methodology</strong>, submitted to ACM TiiS, MIT-licensed on <a href="https://github.com/RinDig/Interpretable-Context-Methodology-ICM-" target="_blank" rel="noopener">GitHub</a>, with a 52-member practitioner community. Written for exactly the kind of agent system Glidely is building.
+          </p>
+
+          <p>
+            Jake also built an online community to 22,000 members in five weeks. Separate track, useful context on distribution instinct.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof">
+      <div class="container">
+        <h3>Signals worth a minute</h3>
+        <div class="grid">
+          <article class="item">
+            <div class="tag">Scope precedent</div>
+            <h4>Feeld, Andrew Santus (CTO)</h4>
+            <p>Scoped sprint. Workshop, advisory calls, Organizational Context Architecture, Strategic Operations Framework. Product company, technical co-founder buyer.</p>
+          </article>
+          <article class="item">
+            <div class="tag">Method</div>
+            <h4>Interpretable Context Methodology</h4>
+            <p>Folder structure as agent architecture. Submitted to ACM TiiS. MIT-licensed. <a href="https://github.com/RinDig/Interpretable-Context-Methodology-ICM-" target="_blank" rel="noopener">Repo</a>.</p>
+          </article>
+          <article class="item">
+            <div class="tag">Ecosystem</div>
+            <h4>NLP Logix partnership</h4>
+            <p>Eduba partners with <a href="https://nlplogix.com" target="_blank" rel="noopener">NLP Logix</a> for work that sits below the orchestration layer. NLP Logix has been in machine learning since 2011 and runs over 150 data scientists.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="call">
+      <div class="container">
+        <h2>30 minutes with Matt. Bring one agent workflow you are worried about at scale.</h2>
+        <p>
+          At the booth at eMerge, ask for Matt. He is running our floor conversations at SS26's side of the hall. If you would rather do it after the dust settles, grab time below. We will walk through it together.
+        </p>
+
+        <div class="actions">
+          <a class="btn btn-amber" href="https://calendly.com/thecro-eduba/30min" target="_blank" rel="noopener" aria-label="Book 30 minutes with Matt Creamer via Calendly">
+            Book 30 minutes with Matt
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <a class="btn btn-ghost" href="mailto:thecro@eduba.io" aria-label="Email Matt Creamer">Email Matt directly</a>
+        </div>
+
+        <div class="host">
+          <span class="avatar" aria-hidden="true">MC</span>
+          <span>Matt Creamer, CRO at Eduba &middot; <a href="mailto:thecro@eduba.io" style="color: inherit;">thecro@eduba.io</a></span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container row">
+      <span class="prepared">Prepared by <strong>Eduba</strong>: <a href="https://eduba.io" target="_blank" rel="noopener">eduba.io</a></span>
+      <span>For Glidely, Inc. &middot; glidely.ai &middot; eMerge Americas 2026 &middot; SS26</span>
+    </div>
+  </footer>
+
+</body>
+</html>
